@@ -10,8 +10,8 @@ body { margin:0; padding:0; }
 .marker {
 	background-image: url('/dist/dot.svg');
 	background-size: cover;
-	width: 50px;
-	height: 50px;
+	width: 30px;
+	height: 30px;
 	border-radius: 50%;
 	cursor: pointer;
 }
@@ -24,13 +24,34 @@ body { margin:0; padding:0; }
 		position: fixed;
 		height: 150px;
 		bottom: 10px;
-		width: 500px;
+		width: 660px;
 		background-color: #fff;
 		left: 50%;
-		margin-left: -250px;
+		margin-left: -330px;
 }
 
 .thumbnail-container {
+	width: 30%;
+	height: 120px;
+	float: left;
+	background: #ccc;
 	margin-top: 15px;
 	margin-left: 15px;
+}
+
+.house-info {
+	margin-left: 35%;
+	margin-right: 15px;
+	height: 120px;
+	background: #eee;
+}
+/* https://stackoverflow.com/questions/17217766/two-divs-side-by-side-fluid-display */
+
+.detail-info-first-row {
+	margin-top: 15px;
+	margin-bottom: 0;
+}
+
+.detail-info {
+	margin-top: 8px;
 }

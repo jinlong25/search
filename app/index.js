@@ -13,18 +13,21 @@ var map = new mapboxgl.Map({
 	zoom: 12
 });
 
-var dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRe7HWkZ_jMhf51SMTxRluLeYTgWDcwcQFJEeYA74hvdCWMB8Z4zvNoV1L9ywMyfCuDi2YoU5vT41WZ/pub?gid=0&single=true&output=tsv'
+var dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRMA_kwqeopt52Kgsq77zsSdU_ZVduMTWPSLEBilPDijVZ48-HkdGbkVbJd4YWF8ujwdsE4i6XmyRMh/pub?gid=0&single=true&output=tsv'
 
 d3.tsv(dataUrl).then(function(data) {
   data.forEach(function(d) {
     var el = document.createElement('div');
     el.className = 'marker';
     
+    //add data to marker
+    Object.getOwnPropertyNames(d).forEach(function(p) {
+      el.setAttribute('data-' + p, d[p])
+    });
+    
     new mapboxgl.Marker(el)
       .setLngLat([parseFloat(d.lon), parseFloat(d.lat)])
       .addTo(map);
-    
-    console.log([parseFloat(d.lon), parseFloat(d.lat)]);
   });
 });
 
