@@ -59,9 +59,39 @@ d3.tsv(dataUrl).then(function(data) {
 		d3.select('.finished-sqft').html(thisProperty.attr('data-finishedsqft'));
 		d3.select('.lot-sqft').html(thisProperty.attr('data-lotsizesqft'));
 		
-		
+		//remove previous isochrone layers
+		map.removeLayer('isomap0');
+		map.removeLayer('isomap1');
+		map.removeLayer('isomap2');
+		//add isochrone layer
+		var isochromeUrl = 'https://api.mapbox.com/isochrone/v1/mapbox/driving/'
+			+ thisProperty.attr('data-lon') + ',' + thisProperty.attr('data-lat') +'?contours_minutes=3,5,10&contours_colors=6706ce,04e813,4286f4&polygons=true&access_token=' + mapboxgl.accessToken;
+			
+		//draw isochrone layer
+		d3.json(isochromeUrl)
+			.then(function(res) {
+				res['features'].forEach(function(polygon, i) {
+					map.addLayer( {
+						'id': 'isomap' + i,
+						'type': 'fill',
+						'layout': {},
+						'paint': {
+							'fill-color': isocolor[i],
+							'fill-opacity': 0.6
+						},
+						'source': {
+							'type': 'geojson',
+							'data': polygon
+						}
+					});
+				});
+			});
 	});
 });
+
+var isocolor = ['#b2e2e2', '#66c2a4', '#238b45'];
+
+
 
 
 
