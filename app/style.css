@@ -8,6 +8,7 @@ body { margin:0; padding:0; }
 }
 
 .marker {
+	background-color: none;
 	background-image: url('/dist/dot.svg');
 	background-size: cover;
 	width: 30px;
@@ -34,7 +35,7 @@ body { margin:0; padding:0; }
 	width: 30%;
 	height: 120px;
 	float: left;
-	background: #ccc;
+	/* background: #ccc; */
 	margin-top: 15px;
 	margin-left: 15px;
 }
@@ -43,7 +44,7 @@ body { margin:0; padding:0; }
 	margin-left: 35%;
 	margin-right: 15px;
 	height: 120px;
-	background: #eee;
+	/* background: #eee; */
 }
 /* https://stackoverflow.com/questions/17217766/two-divs-side-by-side-fluid-display */
 

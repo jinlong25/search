@@ -3,26 +3,29 @@
 <head>
 	<meta charset="utf-8">
 	<title>Home Search</title>
-	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-	<script src='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
-	<link href='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+	<script src="https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js"></script>
+	<link href="https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" rel="stylesheet" />
 </head>
 <body>
 	<div id="map"></div>
 	<!-- <div class="footer navbar-fixed-bottom">
 		dsfladsjfl;dsj;s
 	</div> -->
-	<div id="info_pane" class="shadow-lg">
+	<div id="info_pane" class="shadow-lg" style="display:none">
 		<div class="thumbnail-container">
-			<img src="https://photos.zillowstatic.com/p_h/ISecyecbw5bcza1000000000.jpg" height = '120px'>
+			<img class="property-thumbnail" src="https://photos.zillowstatic.com/p_h/ISecyecbw5bcza1000000000.jpg" height = "120px">
 		</div>
 		<div class="house-info">
 			<p class="detail-info-first-row">
-				<span>$890,000 &middot;</span>
-				<span>4BD &middot; 4BA &middot;</span>
-				<span>2199/11268sqft</span>
+				<a class="zillow-link" href='http://www.google.com' target="_blank">
+					<span class="property-address">23963 Crosson Dr, Woodland Hills</span>
+				</a>
 			</p>
-			<p class="detail-info">23963 Crosson Dr, Woodland Hills</p>
+			<p class="detail-info">
+				$<span class="asking-price">890,000</span> &middot;
+				<span class="bedroom-count">4</span>BD &middot; <span class="bathroom-count">4</span>BA &middot;</span>
+				<span class="finished-sqft">2199</span>/<span class="lot-sqft">11268</span>sqft</span></p>
 		</div>
 	</div>
 </body>

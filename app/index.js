@@ -29,6 +29,38 @@ d3.tsv(dataUrl).then(function(data) {
       .setLngLat([parseFloat(d.lon), parseFloat(d.lat)])
       .addTo(map);
   });
+	
+	//add clickable actions
+	d3.selectAll('.marker').on('click', function() {
+		//unhighlight all markers
+		d3.selectAll('.marker').style('background-color', 'transparent');
+		
+		//show info_pane
+		d3.select('#info_pane').style('display', 'block')
+		
+		//update info_pane
+		var thisProperty = d3.select(this);
+		
+		//highlight this marker
+		thisProperty.style('background-color', '#ccc');
+		
+		d3.select('.property-thumbnail').attr('src', thisProperty.attr('data-thumbnail'));
+		d3.select('.property-address').html(
+			thisProperty.attr('data-street')
+			 + ', ' 
+			 + thisProperty.attr('data-city')
+			 + ' '
+			 + thisProperty.attr('data-zipcode')
+		);
+		d3.select('.zillow-link').attr('href', thisProperty.attr('data-homedetailslinks'));
+		d3.select('.asking-price').html(thisProperty.attr('data-askingprice'));
+		d3.select('.bedroom-count').html(thisProperty.attr('data-bedrooms'));
+		d3.select('.bathroom-count').html(thisProperty.attr('data-bathrooms'));
+		d3.select('.finished-sqft').html(thisProperty.attr('data-finishedsqft'));
+		d3.select('.lot-sqft').html(thisProperty.attr('data-lotsizesqft'));
+		
+		
+	});
 });
 
 
