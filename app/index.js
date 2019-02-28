@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 import './style.css';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiamlubG9uZyIsImEiOiJhMWUzNzk1MTEyNTUyNzkyNzBjZWUzYWMwODM2ZjgyZiJ9.youixT7oBlwLEwXC9q3P3w';
+var mapLayers = [];
 
 // set up a mapbox map
 var map = new mapboxgl.Map({
@@ -59,40 +60,44 @@ d3.tsv(dataUrl).then(function(data) {
 		d3.select('.finished-sqft').html(thisProperty.attr('data-finishedsqft'));
 		d3.select('.lot-sqft').html(thisProperty.attr('data-lotsizesqft'));
 		
-		//remove previous isochrone layers
-		map.removeLayer('isomap0');
-		map.removeLayer('isomap1');
-		map.removeLayer('isomap2');
+		//remove iso layer if any
+		try {
+			map.removeLayer('iso');
+			map.removeSource('iso');
+		} catch {
+			console.log('no such layer/source');
+		}
+		
 		//add isochrone layer
 		var isochromeUrl = 'https://api.mapbox.com/isochrone/v1/mapbox/driving/'
-			+ thisProperty.attr('data-lon') + ',' + thisProperty.attr('data-lat') +'?contours_minutes=3,5,10&contours_colors=6706ce,04e813,4286f4&polygons=true&access_token=' + mapboxgl.accessToken;
-			
+			+ thisProperty.attr('data-lon') + ',' + thisProperty.attr('data-lat') +'?contours_minutes=3,5,10&contours_colors=238b45,66c2a4,b2e2e2&polygons=true&access_token=' + mapboxgl.accessToken;
+
 		//draw isochrone layer
 		d3.json(isochromeUrl)
 			.then(function(res) {
-				res['features'].forEach(function(polygon, i) {
-					map.addLayer( {
-						'id': 'isomap' + i,
-						'type': 'fill',
-						'layout': {},
-						'paint': {
-							'fill-color': isocolor[i],
-							'fill-opacity': 0.6
+				map.addLayer( {
+					'id': 'iso',
+					'type': 'fill',
+					'layout': {},
+					'paint': {
+						'fill-color': {
+							'type': 'identity',
+							'property': 'color' 
 						},
-						'source': {
-							'type': 'geojson',
-							'data': polygon
-						}
-					});
+						// 'fill-opacity': {
+						// 	'type': 'identity',
+						// 	'property': 'fillOpacity' 
+						// }
+						'fill-opacity': 0.6
+					},
+					'source': {
+						'type': 'geojson',
+						'data': res
+					}
 				});
 			});
 	});
 });
-
-var isocolor = ['#b2e2e2', '#66c2a4', '#238b45'];
-
-
-
 
 
 // geocoder(data[0]['address'], mapboxgl.accessToken);
