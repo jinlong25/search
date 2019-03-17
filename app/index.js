@@ -14,9 +14,34 @@ var map = new mapboxgl.Map({
 	zoom: 12
 });
 
+
+
+
 var dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRMA_kwqeopt52Kgsq77zsSdU_ZVduMTWPSLEBilPDijVZ48-HkdGbkVbJd4YWF8ujwdsE4i6XmyRMh/pub?gid=0&single=true&output=tsv'
 
 d3.tsv(dataUrl).then(function(data) {
+	map.on('load', function() {
+		//draw highway buffer area
+		d3.json('/data/fwy_101_buffer_1500ft.geojson')
+			.then(function(res) {
+				console.log(res);
+				map.addLayer( {
+					'id': 'highway_buffer',
+					'type': 'fill',
+					'layout': {},
+					'paint': {
+						'fill-color': '#C2C8CC',
+						'fill-opacity': 0.6
+					},
+					'source': {
+						'type': 'geojson',
+						'data': res
+					}
+				});
+			});
+	});
+	
+	
   data.forEach(function(d) {
     var el = document.createElement('div');
     el.className = 'marker';
@@ -84,10 +109,6 @@ d3.tsv(dataUrl).then(function(data) {
 							'type': 'identity',
 							'property': 'color' 
 						},
-						// 'fill-opacity': {
-						// 	'type': 'identity',
-						// 	'property': 'fillOpacity' 
-						// }
 						'fill-opacity': 0.6
 					},
 					'source': {
