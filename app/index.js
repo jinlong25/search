@@ -14,43 +14,42 @@ var map = new mapboxgl.Map({
 	zoom: 12
 });
 
-
-
+//draw highway buffer area
+map.on('load', function() {
+	d3.json('/data/fwy_101_buffer_1500ft.geojson')
+		.then(function(res) {
+			map.addLayer( {
+				'id': 'highway_buffer',
+				'type': 'fill',
+				'layout': {},
+				'paint': {
+					'fill-color': '#C2C8CC',
+					'fill-opacity': 0.6
+				},
+				'source': {
+					'type': 'geojson',
+					'data': res
+				}
+			});
+		});
+});
 
 var dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRMA_kwqeopt52Kgsq77zsSdU_ZVduMTWPSLEBilPDijVZ48-HkdGbkVbJd4YWF8ujwdsE4i6XmyRMh/pub?gid=0&single=true&output=tsv'
 
-d3.tsv(dataUrl).then(function(data) {
-	map.on('load', function() {
-		//draw highway buffer area
-		d3.json('/data/fwy_101_buffer_1500ft.geojson')
-			.then(function(res) {
-				console.log(res);
-				map.addLayer( {
-					'id': 'highway_buffer',
-					'type': 'fill',
-					'layout': {},
-					'paint': {
-						'fill-color': '#C2C8CC',
-						'fill-opacity': 0.6
-					},
-					'source': {
-						'type': 'geojson',
-						'data': res
-					}
-				});
-			});
-	});
-	
-	
+d3.tsv(dataUrl).then(function(data) {	
   data.forEach(function(d) {
     var el = document.createElement('div');
     el.className = 'marker';
     
     //add data to marker
     Object.getOwnPropertyNames(d).forEach(function(p) {
-      el.setAttribute('data-' + p, d[p])
+      el.setAttribute('data-' + p, d[p]);
     });
+		
+		//initialize clicked state for each marker
+		el.setAttribute('data-clicked', 0);
     
+		//add markers to map
     new mapboxgl.Marker(el)
       .setLngLat([parseFloat(d.lon), parseFloat(d.lat)])
       .addTo(map);
@@ -58,32 +57,33 @@ d3.tsv(dataUrl).then(function(data) {
 	
 	//add clickable actions
 	d3.selectAll('.marker').on('click', function() {
+		
+		//update info_pane
+		var thisListing = d3.select(this);
+			
 		//unhighlight all markers
 		d3.selectAll('.marker').style('background-color', 'transparent');
 		
 		//show info_pane
-		d3.select('#info_pane').style('display', 'block')
-		
-		//update info_pane
-		var thisProperty = d3.select(this);
+		d3.select('#info_pane').style('display', 'block');
 		
 		//highlight this marker
-		thisProperty.style('background-color', '#ccc');
+		thisListing.style('background-color', '#ccc');
 		
-		d3.select('.property-thumbnail').attr('src', thisProperty.attr('data-thumbnail'));
+		d3.select('.property-thumbnail').attr('src', thisListing.attr('data-thumbnail'));
 		d3.select('.property-address').html(
-			thisProperty.attr('data-street')
+			thisListing.attr('data-street')
 			 + ', ' 
-			 + thisProperty.attr('data-city')
+			 + thisListing.attr('data-city')
 			 + ' '
-			 + thisProperty.attr('data-zipcode')
+			 + thisListing.attr('data-zipcode')
 		);
-		d3.select('.zillow-link').attr('href', thisProperty.attr('data-homedetailslinks'));
-		d3.select('.asking-price').html(thisProperty.attr('data-askingprice'));
-		d3.select('.bedroom-count').html(thisProperty.attr('data-bedrooms'));
-		d3.select('.bathroom-count').html(thisProperty.attr('data-bathrooms'));
-		d3.select('.finished-sqft').html(thisProperty.attr('data-finishedsqft'));
-		d3.select('.lot-sqft').html(thisProperty.attr('data-lotsizesqft'));
+		d3.select('.zillow-link').attr('href', thisListing.attr('data-homedetailslinks'));
+		d3.select('.asking-price').html(thisListing.attr('data-askingprice'));
+		d3.select('.bedroom-count').html(thisListing.attr('data-bedrooms'));
+		d3.select('.bathroom-count').html(thisListing.attr('data-bathrooms'));
+		d3.select('.finished-sqft').html(thisListing.attr('data-finishedsqft'));
+		d3.select('.lot-sqft').html(thisListing.attr('data-lotsizesqft'));
 		
 		//remove iso layer if any
 		try {
@@ -95,7 +95,7 @@ d3.tsv(dataUrl).then(function(data) {
 		
 		//add isochrone layer
 		var isochromeUrl = 'https://api.mapbox.com/isochrone/v1/mapbox/driving/'
-			+ thisProperty.attr('data-lon') + ',' + thisProperty.attr('data-lat') +'?contours_minutes=3,5,10&contours_colors=238b45,66c2a4,b2e2e2&polygons=true&access_token=' + mapboxgl.accessToken;
+			+ thisListing.attr('data-lon') + ',' + thisListing.attr('data-lat') +'?contours_minutes=3,5,10&contours_colors=238b45,66c2a4,b2e2e2&polygons=true&access_token=' + mapboxgl.accessToken;
 
 		//draw isochrone layer
 		d3.json(isochromeUrl)
@@ -116,7 +116,9 @@ d3.tsv(dataUrl).then(function(data) {
 						'data': res
 					}
 				});
-			});
+			});			
+		
+
 	});
 });
 
