@@ -9,7 +9,7 @@ body { margin:0; padding:0; }
 
 .marker {
 	background-color: none;
-	background-image: url('./dist/dot.svg');
+	background-image: url('../dist/dot.svg');
 	background-size: cover;
 	width: 30px;
 	height: 30px;
