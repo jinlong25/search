@@ -87,16 +87,11 @@ d3.tsv(dataUrl).then(function(data) {
 		d3.select('.finished-sqft').html(thisListing.attr('data-finishedsqft'));
 		d3.select('.lot-sqft').html(thisListing.attr('data-lotsizesqft'));
 		
-		//remove iso layer if any
-		try {
-			map.removeLayer('iso');
-			map.removeSource('iso');
-		} catch {
-			console.log('no such layer/source');
-		}
-		
-		console.log(showIsoLayer);
 		if (showIsoLayer) {
+			
+			//remove iso layer if any
+			removeLayer('iso');
+			
 			//add isochrone layer
 			var isochromeUrl = 'https://api.mapbox.com/isochrone/v1/mapbox/driving/'
 				+ thisListing.attr('data-lon') + ',' + thisListing.attr('data-lat') +'?contours_minutes=3,5,10&contours_colors=238b45,66c2a4,b2e2e2&polygons=true&access_token=' + mapboxgl.accessToken;
@@ -138,6 +133,17 @@ $('#isochrone_layer_toggle').click(function() {
      map.setLayoutProperty('iso', 'visibility', 'none');
 		 console.log('unchecked');
 		 showIsoLayer = false;
+		 removeLayer('iso');
      $('.checkbox').prop('checked', false);
    }
 });
+
+function removeLayer(layerName) {
+	//remove iso layer if any
+	try {
+		map.removeLayer(layerName);
+		map.removeSource(layerName);
+	} catch {
+		console.log('no such ' + layerName + ' layer/source');
+	}
+}
