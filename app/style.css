@@ -5,6 +5,21 @@ body { margin:0; padding:0; }
 	top:0;
 	bottom:0;
 	width:100%;
+	z-index: -1;
+}
+
+.ctrl-panel {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	background-color: rgba(255, 255, 255, 0.85);
+}
+
+.form-check {
+	padding-top: 15px;
+	padding-right: 20px;
+	padding-bottom: 15px;
+	padding-left: 35px;
 }
 
 .marker {

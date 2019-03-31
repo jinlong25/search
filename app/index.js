@@ -16,7 +16,8 @@ var map = new mapboxgl.Map({
 
 //draw highway buffer area
 map.on('load', function() {
-	d3.json('https://jinlong25.github.io/search/dist/fwy_101_buffer_1500ft.geojson')
+	// d3.json('https://jinlong25.github.io/search/dist/fwy_101_buffer_1500ft.geojson')
+	d3.json('/dist/fwy_101_buffer_1500ft.geojson')
 		.then(function(res) {
 			map.addLayer( {
 				'id': 'highway_buffer',
