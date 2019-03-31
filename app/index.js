@@ -5,6 +5,7 @@ import './style.css';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiamlubG9uZyIsImEiOiJhMWUzNzk1MTEyNTUyNzkyNzBjZWUzYWMwODM2ZjgyZiJ9.youixT7oBlwLEwXC9q3P3w';
 var mapLayers = [];
+var showIsoLayer = false;
 
 // set up a mapbox map
 var map = new mapboxgl.Map({
@@ -94,42 +95,49 @@ d3.tsv(dataUrl).then(function(data) {
 			console.log('no such layer/source');
 		}
 		
-		//add isochrone layer
-		var isochromeUrl = 'https://api.mapbox.com/isochrone/v1/mapbox/driving/'
-			+ thisListing.attr('data-lon') + ',' + thisListing.attr('data-lat') +'?contours_minutes=3,5,10&contours_colors=238b45,66c2a4,b2e2e2&polygons=true&access_token=' + mapboxgl.accessToken;
+		console.log(showIsoLayer);
+		if (showIsoLayer) {
+			//add isochrone layer
+			var isochromeUrl = 'https://api.mapbox.com/isochrone/v1/mapbox/driving/'
+				+ thisListing.attr('data-lon') + ',' + thisListing.attr('data-lat') +'?contours_minutes=3,5,10&contours_colors=238b45,66c2a4,b2e2e2&polygons=true&access_token=' + mapboxgl.accessToken;
 
-		//draw isochrone layer
-		d3.json(isochromeUrl)
-			.then(function(res) {
-				map.addLayer( {
-					'id': 'iso',
-					'type': 'fill',
-					'layout': {},
-					'paint': {
-						'fill-color': {
-							'type': 'identity',
-							'property': 'color' 
+			//draw isochrone layer
+			d3.json(isochromeUrl)
+				.then(function(res) {
+					map.addLayer( {
+						'id': 'iso',
+						'type': 'fill',
+						'layout': {},
+						'paint': {
+							'fill-color': {
+								'type': 'identity',
+								'property': 'color' 
+							},
+							'fill-opacity': 0.6
 						},
-						'fill-opacity': 0.6
-					},
-					'source': {
-						'type': 'geojson',
-						'data': res
-					}
-				});
-			});			
-		
+						'source': {
+							'type': 'geojson',
+							'data': res
+						}
+					});
+				});	
+		}
 
 	});
 });
 
-
-// geocoder(data[0]['address'], mapboxgl.accessToken);
-// function geocoder(address, accessToken) {
-//   $.ajax({
-//     url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + address + '.json?access_token=' + accessToken,
-//     type: 'GET'
-//   }).done(function(res) {
-//     console.log(res['features'][0]['center']);
-//   })
-// }
+//isochrone layer checkbox control
+$('#isochrone_layer_toggle').click(function() {
+   var check = $(this).prop('checked');
+   if(check == true) {
+     map.setLayoutProperty('iso', 'visibility', 'visible');
+		 console.log('checked');
+		 showIsoLayer = true;
+     $('.checkbox').prop('checked', true);
+   } else {
+     map.setLayoutProperty('iso', 'visibility', 'none');
+		 console.log('unchecked');
+		 showIsoLayer = false;
+     $('.checkbox').prop('checked', false);
+   }
+});
